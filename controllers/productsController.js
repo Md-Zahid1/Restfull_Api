@@ -141,7 +141,46 @@ const productsController = {
         }
 
         return res.json(document)
-    }
+    },
+
+
+    async updateproduct(req, res, next) {
+        handleMultipartData(req, res,
+            async (err) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message })
+                }
+                const filePath = req.file.path
+                //validation
+                const { error } = productSchema.validate(req.body)
+                if (error) {
+                    //delete the uploadfile
+                    fs.unlink(`${appRoot}/${filePath}`, (err) => {
+                        if (err) {
+                            return res.status(500).json({ message: err.message })
+                        }
+                    })
+                    return res.status(500).json({ message: error.message })
+                }
+
+                const { name, price, size } = req.body
+                let document;
+
+                try {
+                    document = await product.findOneAndUpdate({
+                        name,
+                        price,
+                        size,
+                        image: filePath
+                    })
+                } catch (err) {
+                    return res.status(500).json({ message: err.message })
+                }
+
+                res.status(201).json(document)
+            });
+    },
+
 }
 
 

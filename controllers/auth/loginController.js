@@ -25,7 +25,7 @@ const loginController = {
             if (!user) {
                 return res.status(401).json({ message: "Username or password wrong!" });
             }
-                console.log("user", user, req.body.password)
+            console.log("user", user, req.body.password)
             //compare the password
             const match = await bcrypt.compare(req.body.password, user.password)
             if (!match) {

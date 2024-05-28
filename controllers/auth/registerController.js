@@ -33,7 +33,7 @@ const registerController = {
             return res.status(403).json({ message: error.message })
         }
 
-          
+
         let access_token;
         let result;
 
@@ -49,7 +49,7 @@ const registerController = {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             //prepare the model
-             result = await User.create({
+            result = await User.create({
                 name,
                 email,
                 password: hashedPassword
@@ -58,10 +58,10 @@ const registerController = {
         } catch (err) {
             return res.status(403).json({ message: err.message });
         }
-        access_token = JwtService.sign({_id: result._id, role: result.role})
+        access_token = JwtService.sign({ _id: result._id, role: result.role })
         res.status(201).json({ access_token: access_token })
     },
-    
+
 }
 
 
